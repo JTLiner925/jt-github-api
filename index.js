@@ -1,5 +1,5 @@
-const apiKey = '';
-const searchURL = '';
+const apiType = 'owner';
+const searchURL = 'https://api.github.com/users';
 
 function formatQueryParams(params){
   const queryItems = Object.keys(params)
@@ -9,18 +9,15 @@ function formatQueryParams(params){
 
 function displayResults(responseJson, maxResults){
   $('#results-list').empty();
-  for(let i = 0; i< responseJson.articles.length & i<maxResults; i++){
+  for(let i = 0; i< responseJson.username.length & i<maxResults; i++){
     $('#results-list').append(
-      `<li><h3><a href="${responseJson.articles[i].url}">${responseJson.articles[i].title}</a></h3>
-      <p>${responseJson.articles[i].source.name}</p>
-      <p>By ${responseJson.articles[i].author}</p>
-      <p>${responseJson.articles[i].description}</p>
-      <img src='${responseJson.articles[i].urlToImage}'>
+      `<li><h3>${responseJson.username[i].full_name}</h3>
+      <h4><a href="${responseJson.username[i].url}">${responseJson.username[i].name}</a></h4>
       </li>`
     );}
   $('#results').removeClass('hidden');
 }
-function getUserRepos(query, maxResults=10) {
+function getUserRepos(query, maxResults=20) {
   const params = {
     q: query,
     language: 'en',
@@ -31,7 +28,7 @@ function getUserRepos(query, maxResults=10) {
 
   const options = {
     headers: new Headers({
-      "X-Api-Key": apiKey})
+      "type": apiType})
   };
 
   fetch(url, options)
