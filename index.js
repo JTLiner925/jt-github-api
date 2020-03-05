@@ -1,6 +1,6 @@
 const apiType = 'user';
 
-token = 'f19bc45e52427997e6c6956710b1726fc24d2f13';
+token = 'b6e11cae499a29d375abe68d8aebd39d130850ee';
 
 
 // function formatQueryParams(params){
@@ -11,7 +11,8 @@ token = 'f19bc45e52427997e6c6956710b1726fc24d2f13';
 
 function displayResults(responseJson){
   $('#results-list').empty();
-  for(let i = 0; i< responseJson; i++){
+  $('#js-error-message').empty();
+  for(let i = 0; i< responseJson.length; i++){
     $('#results-list').append(
       `<li><h3>${responseJson[i].full_name}</h3>
       <h4><a href="${responseJson[i].url}">${responseJson[i].name}</a></h4>
@@ -55,10 +56,11 @@ function getUserRepos(handle) {
 function watchForm(){
   $('form').submit(event => {
     event.preventDefault();
-    
+    $('#results-list').empty();
     const searchTerm = $('#js-search-term').val();
    
     getUserRepos(searchTerm);
+   
   });
 }
 
