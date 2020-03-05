@@ -1,34 +1,41 @@
-const apiType = 'owner';
-const searchURL = 'https://api.github.com/users';
+const apiType = 'user';
 
-function formatQueryParams(params){
-  const queryItems = Object.keys(params)
-    .map(key => `${key}=${params[key]}`);
-  return queryItems.join('&');
-}
+token = 'f19bc45e52427997e6c6956710b1726fc24d2f13';
 
-function displayResults(responseJson, maxResults){
+
+// function formatQueryParams(params){
+//   const queryItems = Object.keys(params)
+//     .map(key => `${key}=${params[key]}`);
+//   return queryItems.join('&');
+// }
+
+function displayResults(responseJson){
   $('#results-list').empty();
-  for(let i = 0; i< responseJson.username.length & i<maxResults; i++){
+  for(let i = 0; i< responseJson; i++){
     $('#results-list').append(
-      `<li><h3>${responseJson.username[i].full_name}</h3>
-      <h4><a href="${responseJson.username[i].url}">${responseJson.username[i].name}</a></h4>
+      `<li><h3>${responseJson[i].full_name}</h3>
+      <h4><a href="${responseJson[i].url}">${responseJson[i].name}</a></h4>
       </li>`
     );}
   $('#results').removeClass('hidden');
+  
 }
-function getUserRepos(query, maxResults=20) {
-  const params = {
-    q: query,
-    language: 'en',
-  };
-  const queryString = formatQueryParams(params);
-  const url = searchURL + '?' + queryString;
-  console.log(url);
+function getUserRepos(handle) {
+  // const searchURL = ;
+  // const params = {
+  //   q: query,
+  //   language: 'en',
+  // };
+  // const queryString = formatQueryParams(params);
+  const url = `https://api.github.com/users/${handle}/repos`;
+  // console.log(url);
 
   const options = {
     headers: new Headers({
-      "type": apiType})
+      // "type": apiType,
+      'Accept': 'application/vnd.github.nebula-preview+json',
+      "Authorization": token})
+      
   };
 
   fetch(url, options)
@@ -38,7 +45,7 @@ function getUserRepos(query, maxResults=20) {
       }
       throw new Error(response.statusText);
     })
-    .then(responseJson => displayResults(responseJson, maxResults))
+    .then(responseJson => displayResults(responseJson))
     .catch(err => { $('#js-error-message')
       .text(`Something went wrong: ${err.message}`);
     });
@@ -48,9 +55,10 @@ function getUserRepos(query, maxResults=20) {
 function watchForm(){
   $('form').submit(event => {
     event.preventDefault();
+    
     const searchTerm = $('#js-search-term').val();
-    const maxResults = $('#js-max-results').val();
-    getUserRepos(searchTerm, maxResults);
+   
+    getUserRepos(searchTerm);
   });
 }
 
